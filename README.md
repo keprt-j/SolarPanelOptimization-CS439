@@ -29,9 +29,14 @@ pip install numpy pandas scikit-learn matplotlib streamlit
 Expected default folders in project root:
 
 - `pvdaq_downloads_2024/` - PV system daily CSV files.
-- `NSRDB_2024_Data/` - NSRDB weather CSV grid files.
+- `NSRDB_2024_Data/` - NSRDB weather CSV grid files for solar farm locations.
+- `NSRDB_2024_US_Data/` - NSRDB weather CSV grid files for across the US.
 
-The build script also fetches a systems catalog from:
+Expected files in project root:
+- `systems_20250729.csv` - solar farm system catalog.
+- `NSRDB_location_file_map.json` - dictionary file that links NSRDB weather data to solar farm sites.
+
+The build script also fetches a systems catalog from (csv file also available in the root directory):
 
 - `https://oedi-data-lake.s3.amazonaws.com/pvdaq/csv/systems_20250729.csv`
 
