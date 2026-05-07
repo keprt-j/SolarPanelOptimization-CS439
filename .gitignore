@@ -1,0 +1,12 @@
+.conda/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Large local/raw data and generated artifacts
+NSRDB_2024_Data/
+pvdaq_downloads_2024/
+modeling_output/
+heatmaps/*.png
+heatmaps/*.csv
+solar_farm_consolidated_2024.pkl
