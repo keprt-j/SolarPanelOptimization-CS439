@@ -31,6 +31,7 @@ Expected default folders in project root:
 - `pvdaq_downloads_2024/` - PV system daily CSV files.
 - `NSRDB_2024_Data/` - NSRDB weather CSV grid files for solar farm locations.
 - `NSRDB_2024_US_Data/` - NSRDB weather CSV grid files for across the US.
+- `heatmaps/` - heatmaps generated from GHI data in 'NSRDB_2024_US_Data/'
 
 Expected files in project root:
 - `systems_20250729.csv` - solar farm system catalog.
@@ -39,6 +40,8 @@ Expected files in project root:
 The build script also fetches a systems catalog from (csv file also available in the root directory):
 
 - `https://oedi-data-lake.s3.amazonaws.com/pvdaq/csv/systems_20250729.csv`
+
+Link to google drive zip file with all data contained: https://drive.google.com/file/d/1F1Y7Zo7wOWrdlZ8JL10b-EJ4s6FV-IRh/view?usp=sharing
 
 ## Run Pipeline (End-to-End)
 
