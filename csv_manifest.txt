@@ -1,0 +1,6 @@
+systems_static.csv
+system_weather_map.csv
+pv_system_daily.csv
+weather_location_daily.csv
+system_day_dataset.csv
+model_dataset_prep.csv
