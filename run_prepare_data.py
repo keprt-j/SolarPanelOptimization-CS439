@@ -5,15 +5,7 @@ import pandas as pd
 
 CONUS_LAT_MIN, CONUS_LAT_MAX = 24.5, 49.5
 CONUS_LON_MIN, CONUS_LON_MAX = -124.8, -66.9
-
-
-def root_dir():
-    return Path.cwd().resolve()
-
-
-def default_out_dir():
-    return root_dir() / "modeling_output"
-
+MODELING_OUTPUT_DIR = Path.cwd().resolve() / "modeling_output"
 
 def _assign_system_splits(system_ids, random_seed):
     rng = np.random.default_rng(random_seed)
@@ -169,14 +161,14 @@ def prepare_model_dataset(
 
 
 def parse_args():
-    out = default_out_dir()
+    out = MODELING_OUTPUT_DIR
     p = argparse.ArgumentParser(description="prepare model_dataset_prep.csv")
     p.add_argument("--dataset-in", type=Path, default=out / "system_day_dataset.csv")
     p.add_argument("--static-in", type=Path, default=out / "systems_static.csv")
     p.add_argument("--prep-out", type=Path, default=out / "model_dataset_prep.csv")
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--max-rows", type=int, default=75000)
-    p.add_argument("--sample-seed", type=int, default=None)
+    p.add_argument("--sample-seed", type=int)
     p.add_argument(
         "--sample-mode",
         type=str,

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import streamlit as st
-from run_train_model import TARGET, default_out_dir, train_model
+from run_train_model import MODELING_OUTPUT_DIR, TARGET, train_model
 from siting_heatmap import (
     CONUS_COVERAGE_LAT_MAX_MIN,
     NSRDB_US_DIRNAME,
@@ -22,7 +22,7 @@ def cached_nsrdb_weather(nsrdb_dir_str, file_signature):
 
 
 def load_saved_seed_default():
-    bundle_path = default_out_dir() / "model_bundle.pkl"
+    bundle_path = MODELING_OUTPUT_DIR / "model_bundle.pkl"
     if not bundle_path.is_file():
         return 1
     try:
@@ -99,7 +99,7 @@ def main():
     st.title('Solar Farm Yield Model: Results')
     with st.sidebar:
         st.header('Run Settings')
-        csv_path = st.text_input('Prepared CSV path', str(default_out_dir() / 'model_dataset_prep.csv'))
+        csv_path = st.text_input('Prepared CSV path', str(MODELING_OUTPUT_DIR / 'model_dataset_prep.csv'))
         nsrdb_us_dir = st.text_input(
             'NSRDB US grid folder',
             str(Path.cwd() / NSRDB_US_DIRNAME),

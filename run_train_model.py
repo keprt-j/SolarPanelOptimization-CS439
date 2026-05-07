@@ -14,6 +14,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 TARGET = "specific_yield_kwh_per_kwp"
+MODELING_OUTPUT_DIR = Path.cwd().resolve() / "modeling_output"
 NUMERIC_FEATURES = [
     "temp_c_mean",
     "rh_pct_mean",
@@ -37,14 +38,6 @@ NUMERIC_FEATURES = [
     "wind_dir_cos",
 ]
 CAT_FEATURES = ["kg_climate", "tracking", "type"]
-
-
-def root_dir():
-    return Path.cwd().resolve()
-
-
-def default_out_dir():
-    return root_dir() / "modeling_output"
 
 
 class ModelingResult:
@@ -82,16 +75,10 @@ class ModelingResult:
         self.importance = importance
         self.selected_vars = selected_vars
 
-    def predict_grid_siting_scores(self, weather_daily, chunk_size=50000):
+    def predict_grid_siting_scores(self, weather_daily):
         from siting_heatmap import grid_siting_scores
 
-        return grid_siting_scores(self, weather_daily, chunk_size=chunk_size)
-
-
-def load_prep(csv_path):
-    df = pd.read_csv(csv_path, parse_dates=["date"], low_memory=False)
-    df["system_id"] = df["system_id"].astype(str)
-    return df
+        return grid_siting_scores(self, weather_daily)
 
 
 def add_engineered_features(df):
@@ -164,7 +151,9 @@ def train_model(
     fast_mode=False,
     random_seed=1,
 ):
-    df = add_engineered_features(load_prep(csv_path))
+    df = pd.read_csv(csv_path, parse_dates=["date"], low_memory=False)
+    df["system_id"] = df["system_id"].astype(str)
+    df = add_engineered_features(df)
     if TARGET not in df.columns or "split" not in df.columns:
         raise ValueError("Prep CSV missing required columns (target/split).")
 
@@ -315,7 +304,7 @@ def save_model_bundle(fit, out_path, seed, target_transform):
 
 
 def parse_args():
-    out = default_out_dir()
+    out = MODELING_OUTPUT_DIR
     p = argparse.ArgumentParser(description="Train models and save summary tables.")
     p.add_argument("--prep-csv", type=Path, default=out / "model_dataset_prep.csv")
     p.add_argument("--metrics-out", type=Path, default=out / "model_metrics.csv")

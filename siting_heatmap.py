@@ -15,6 +15,7 @@ US_LAT_MIN, US_LAT_MAX = 24.5, 49.5
 US_LON_MIN, US_LON_MAX = -124.8, -66.9
 NSRDB_US_DIRNAME = "NSRDB_2024_Data"
 CONUS_COVERAGE_LAT_MAX_MIN = 48.5
+PREDICT_CHUNK_SIZE = 50000
 US_BASEMAP_IMAGE = _ROOT / "heatmaps" / "USA_location_map.svg.png"
 
 
@@ -220,17 +221,17 @@ def build_heatmap_inference_frame(fit: ModelingResult, weather_daily):
     return infer_x, geo
 
 
-def predict_in_chunks(model, x, chunk_size=50000):
+def predict_in_chunks(model, x):
     preds = np.empty(len(x), dtype=float)
     if len(x) == 0:
         return preds
-    for start in range(0, len(x), chunk_size):
-        end = min(start + chunk_size, len(x))
+    for start in range(0, len(x), PREDICT_CHUNK_SIZE):
+        end = min(start + PREDICT_CHUNK_SIZE, len(x))
         preds[start:end] = model.predict(x.iloc[start:end])
     return preds
 
 
-def grid_siting_scores(fit: ModelingResult, weather_daily, chunk_size=50000):
+def grid_siting_scores(fit: ModelingResult, weather_daily):
     """Best-model predictions aggregated per NSRDB grid cell (daily yield → cell mean)."""
     if weather_daily.empty:
         raise ValueError("No usable NSRDB weather rows were parsed from the selected folder.")
@@ -246,7 +247,7 @@ def grid_siting_scores(fit: ModelingResult, weather_daily, chunk_size=50000):
     if infer_x.empty:
         raise ValueError("All inference rows were invalid after numeric sanitization.")
 
-    daily_preds = predict_in_chunks(fit.best_model, infer_x, chunk_size=chunk_size)
+    daily_preds = predict_in_chunks(fit.best_model, infer_x)
     daily_preds = np.maximum(daily_preds, 0.0)
     if not np.isfinite(daily_preds).any():
         raise ValueError("Model returned non-finite predictions for all grid rows.")

@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 
 epsilon = 1e-6
+ROOT_DIR = Path.cwd().resolve()
+MODELING_OUTPUT_DIR = ROOT_DIR / "modeling_output"
 
 # GHI - Global Horizontal Irradiance
 # DNI - Direct Normal Irradiance
@@ -14,14 +16,6 @@ epsilon = 1e-6
 # RH - Relative Humidity
 # Wind Speed - Wind Speed
 # Wind Direction - Wind Direction
-
-def root_dir():
-    return Path.cwd().resolve()
-
-
-def default_out_dir():
-    return root_dir() / "modeling_output"
-
 
 def _nsrdb_catalog(nsrdb_dir):
     
@@ -283,16 +277,15 @@ def build_modeling_outputs(systems_url, pv_dir, nsrdb_dir, out_dir):
 
 
 def parse_args():
-    root = root_dir()
     p = argparse.ArgumentParser(description="build modeling_output CSV artifacts from raw files")
     p.add_argument(
         "--systems-url",
         default="https://oedi-data-lake.s3.amazonaws.com/pvdaq/csv/systems_20250729.csv",
         help="PVDAQ systems catalog CSV URL",
     )
-    p.add_argument("--pv-dir", type=Path, default=root / "pvdaq_downloads_2024")
-    p.add_argument("--nsrdb-dir", type=Path, default=root / "NSRDB_2024_Data")
-    p.add_argument("--out-dir", type=Path, default=default_out_dir())
+    p.add_argument("--pv-dir", type=Path, default=ROOT_DIR / "pvdaq_downloads_2024")
+    p.add_argument("--nsrdb-dir", type=Path, default=ROOT_DIR / "NSRDB_2024_Data")
+    p.add_argument("--out-dir", type=Path, default=MODELING_OUTPUT_DIR)
     return p.parse_args()
 
 
